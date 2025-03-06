@@ -1,11 +1,28 @@
 const express = require("express");
 const axios = require("axios");
+
 const cors = require("cors");
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
+
+const allowedOrigins = [process.env.FRONTEND_URL];
 
 const app = express();
-const PORT = 3001;
 
-app.use(cors());
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+
+const PORT = process.env.PORT || 8083;
 
 app.get("/health", (_, res) => {
   res.send("OK");
@@ -49,5 +66,5 @@ app.get("/get-file", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

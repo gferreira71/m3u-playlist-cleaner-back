@@ -1,0 +1,10 @@
+# compiled output
+/dist
+
+# dependencies
+/node_modules
+
+# env files
+.env.development
+.env.production
+.env
